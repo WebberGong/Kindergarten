@@ -1,0 +1,69 @@
+// Bootstrap Overrides
+
+legend {
+  border-bottom: 0;
+  font-family: 'ProximaNovaLtSemibold';
+}
+
+.modal-header {
+  background-color: #e5edf0;
+  color: #313741;
+  font-family: 'ProximaNovaRgRegular';
+  font-size: 30px;
+}
+
+body {
+  width: 100%;
+  min-width: 320px;
+  color: #313741;
+  font-family: 'ProximaNovaRgRegular';
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+}
+
+.FormBody {
+  background-color: #fff;
+  position: relative;
+  padding: 10px 10px 40px 10px;
+  border: 1px solid #ccc;
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+  box-sizing: border-box;
+  overflow: hidden;
+  display : flex;
+  transform: scale(0.5);
+  font-family: 'FontAwesome';
+
+  @media(min-width: 768px) {
+    padding: 20px 50px 20px 20px;
+  }
+
+  .modal-body-heading {
+    margin-bottom: 10px;
+    font-size: 12px;
+    font-weight: bold;
+  }
+
+  &.ZeroPadding {
+    padding: 0;
+  }
+}
+
+.FormBody--small {
+  height: 115px;
+
+  @media(min-width: 768px) {
+    height: 226px;
+  }
+}
+
+.FormBody--hamburger {
+  height: 167px;
+}
+
+.ui-hidden {
+  display: none;
+}
+
+@-ms-viewport {
+  width: device-width;
+}
