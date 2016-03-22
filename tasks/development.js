@@ -7,7 +7,6 @@ var gulp            = require('gulp'),
   eslint            = require('gulp-eslint'),
   sass              = require('gulp-sass'),
   scssLint          = require('gulp-scss-lint'),
-  path              = require('path'),
   concat            = require('gulp-concat'),
   rename            = require('gulp-rename'),
   sourceMaps        = require('gulp-sourcemaps'),
@@ -16,6 +15,7 @@ var gulp            = require('gulp'),
   cleanCss          = require('gulp-clean-css'),
   htmlmin           = require('gulp-htmlmin'),
   imagemin          = require('gulp-imagemin'),
+  path              = require('path'),
   pngquant          = require('imagemin-pngquant'),
   rimraf            = require('rimraf'),
   browserSync       = require("browser-sync"),
@@ -39,7 +39,7 @@ path = {
   src: {
     base: 'app/',
     html: 'app/*.html',
-    js: 'app/**/*.js',
+    js: ['app/*.js', 'app/js/**/*.js'],
     style: 'app/css/**/*.*',
     images: 'app/images/**/*.*',
     fonts: 'app/fonts/**/*.*'
@@ -47,7 +47,7 @@ path = {
   watch: {
     base: 'app/',
     html: 'app/*.html',
-    js: 'app/**/*.js',
+    js: ['app/*.js', 'app/js/**/*.js'],
     style: 'app/css/**/*.*',
     images: 'app/images/**/*.*',
     fonts: 'app/fonts/**/*.*'
@@ -222,16 +222,16 @@ gulp.task('watch', function(){
     runSequence('html:build', 'revision-replace');
   });
   gulp.watch([path.watch.style], function() {
-    gulp.start('style:build');
+    gulp.run('style:build');
   });
   gulp.watch([path.watch.js], function() {
-    gulp.start('js:build');
+    gulp.run('js:build');
   });
   gulp.watch([path.watch.images], function() {
-    gulp.start('images:build');
+    gulp.run('images:build');
   });
   gulp.watch([path.watch.fonts], function() {
-    gulp.start('fonts:build');
+    gulp.run('fonts:build');
   });
   gulp.watch([path.build.js + '*.js', path.build.style + '*.css'], function() {
     runSequence('html:build', 'revision', 'revision-replace');

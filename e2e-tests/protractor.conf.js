@@ -6,7 +6,7 @@ exports.config = {
   ],
 
   capabilities: {
-    'browserName': 'chrome'
+    'browserName': 'Chrome'
   },
 
   baseUrl: 'http://localhost:8000/app/',
