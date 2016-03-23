@@ -11,6 +11,8 @@ module.exports = function(config){
       'app/test/**/*'
     ],
 
+    reporters: ['junit', 'coverage', 'progress'],
+
     autoWatch : true,
 
     frameworks: ['jasmine'],
@@ -21,12 +23,24 @@ module.exports = function(config){
       'karma-chrome-launcher',
       'karma-firefox-launcher',
       'karma-jasmine',
-      'karma-junit-reporter'
+      'karma-junit-reporter',
+      'karma-coverage'
     ],
 
     junitReporter : {
-      outputFile: 'test_out/unit.xml',
+      outputDir: 'reports/junit',
+      outputFile: 'junit.xml',
       suite: 'unit'
+    },
+
+    coverageReporter: {
+      dir: 'reports/coverage',
+      type : 'html'
+    },
+
+    preprocessors: {
+      'app/js/**/*': ['coverage'],
+      'app/test/**/*': ['coverage']
     }
 
   });
