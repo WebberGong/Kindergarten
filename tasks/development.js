@@ -23,7 +23,7 @@ var gulp            = require('gulp'),
   runSequence       = require("run-sequence"),
   rev               = require("gulp-rev"),
   revReplace        = require("gulp-rev-replace"),
-  karmaServer       = require('karma').Server,
+  karma             = require('karma').Server,
   reload            = browserSync.reload;
 
 /* path config
@@ -280,12 +280,16 @@ gulp.task('default', function (callback) {
 
 /* test
  =================================================================================*/
-gulp.task('test', ['clean-reports'], function (done) {
+gulp.task('test', ['clean-reports'], function () {
     var confPath = path.resolve('./karma.conf.js');
-    new karmaServer({
+    karma.start({
       configFile: confPath,
       singleRun: true
-    }, done).start();
+    }, function(karmaExitStatus) {
+      if (karmaExitStatus) {
+        process.exit(1);
+      }
+    });
 });
 /*=================================================================================*/
 

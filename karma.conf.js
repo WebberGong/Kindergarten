@@ -15,6 +15,10 @@ module.exports = function(config){
 
     autoWatch : true,
 
+    colors: true,
+
+    logLevel: config.LOG_INFO,
+
     frameworks: ['jasmine'],
 
     browsers : ['Chrome'],

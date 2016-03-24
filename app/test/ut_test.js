@@ -5,7 +5,7 @@
 describe('test', function () {
   'use strict';
   it('test1', function () {
-    expect('undefined(type: undefined)').toEqual(printType(undefined));
+    expect('others(type: undefined)').toEqual(printType(undefined));
   });
   it('test2', function () {
     expect('object|null(type: object)').toEqual(printType(null));
@@ -14,15 +14,15 @@ describe('test', function () {
     expect('function(type: function)').toEqual(printType(new Function()));
   });
   it('test4', function () {
-    expect('string|number(type: number)').toEqual(printType(1));
+    expect('string|number|boolean(type: number)').toEqual(printType(1));
   });
   it('test5', function () {
-    expect('string|number(type: number)').toEqual(printType(NaN));
+    expect('string|number|boolean(type: number)').toEqual(printType(NaN));
   });
   it('test6', function () {
-    expect('string|number(type: string)').toEqual(printType("Hello"));
+    expect('string|number|boolean(type: string)').toEqual(printType("Hello"));
   });
   it('test7', function () {
-    expect('others(type: boolean)').toEqual(printType(true));
+    expect('string|number|boolean(type: boolean)').toEqual(printType(true));
   });
 });
