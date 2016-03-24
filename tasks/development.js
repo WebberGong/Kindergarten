@@ -281,15 +281,15 @@ gulp.task('default', function (callback) {
 /* test
  =================================================================================*/
 gulp.task('test', ['clean-reports'], function () {
-    var confPath = path.resolve('./karma.conf.js');
-    karma.start({
-      configFile: confPath,
-      singleRun: true
-    }, function(karmaExitStatus) {
-      if (karmaExitStatus) {
-        process.exit(1);
-      }
-    });
+  var confPath = path.resolve('./karma.conf.js');
+  karma.start({
+    configFile: confPath,
+    singleRun: true
+  }, function(karmaExitStatus) {
+    if (karmaExitStatus) {
+      process.exit(1);
+    }
+  });
 });
 /*=================================================================================*/
 
