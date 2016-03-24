@@ -23,11 +23,12 @@ var gulp            = require('gulp'),
   runSequence       = require("run-sequence"),
   rev               = require("gulp-rev"),
   revReplace        = require("gulp-rev-replace"),
+  karmaServer       = require('karma').Server,
   reload            = browserSync.reload;
 
 /* path config
  =================================================================================*/
-path = {
+var sysPath = {
   build: {
     base: 'www/',
     html: 'www/',
@@ -52,7 +53,8 @@ path = {
     images: 'app/images/**/*.*',
     fonts: 'app/fonts/**/*.*'
   },
-  clean: './www'
+  clean: './www',
+  reports: './reports'
 };
 /*=================================================================================*/
 
@@ -60,9 +62,9 @@ path = {
  =================================================================================*/
 // html build
 gulp.task('html:build', function () {
-  return gulp.src(path.src.html)
+  return gulp.src(sysPath.src.html)
     .pipe(htmlmin())
-    .pipe(gulp.dest(path.build.html))
+    .pipe(gulp.dest(sysPath.build.html))
 });
 
 // vendor js build
@@ -73,7 +75,7 @@ gulp.task('vendor-js:build', function () {
     .pipe(jsFilter)
     .pipe(concat('vendor.min.js'))
     .pipe(uglify())
-    .pipe(gulp.dest(path.build.js))
+    .pipe(gulp.dest(sysPath.build.js))
 });
 
 // vendor style build
@@ -84,7 +86,7 @@ gulp.task('vendor-style:build', function () {
     .pipe(cssFilter)
     .pipe(concat('vendor.min.css'))
     .pipe(cleanCss({keepBreaks: true}))
-    .pipe(gulp.dest(path.build.style))
+    .pipe(gulp.dest(sysPath.build.style))
 });
 
 // vendor fonts build
@@ -93,29 +95,29 @@ gulp.task('vendor-fonts:build', function () {
 
   return gulp.src(mainBowerFiles())
     .pipe(fontFilter)
-    .pipe(gulp.dest(path.build.fonts));
+    .pipe(gulp.dest(sysPath.build.fonts));
 });
 
 // js lint
 gulp.task('js:lint', function () {
-  return gulp.src(path.src.js)
+  return gulp.src(sysPath.src.js)
     .pipe(eslint())
     .pipe(eslint.format())
 });
 
 // js build
 gulp.task('js:build', ['js:lint'], function () {
-  return gulp.src(path.src.js)
+  return gulp.src(sysPath.src.js)
     .pipe(sourceMaps.init())
     .pipe(concat('main.min.js'))
     .pipe(uglify())
     .pipe(sourceMaps.write('./maps'))
-    .pipe(gulp.dest(path.build.js))
+    .pipe(gulp.dest(sysPath.build.js))
 });
 
 // style lint
 gulp.task('style:lint', function () {
-  return gulp.src(path.src.style)
+  return gulp.src(sysPath.src.style)
     .pipe(scssLint({
       'config': './.scss-lint.yml'
     }));
@@ -123,7 +125,7 @@ gulp.task('style:lint', function () {
 
 // style build
 gulp.task('style:build', ['style:lint'], function () {
-  return gulp.src(path.src.style)
+  return gulp.src(sysPath.src.style)
     .pipe(sourceMaps.init())
     .pipe(csscomb())
     .pipe(sass({
@@ -137,62 +139,67 @@ gulp.task('style:build', ['style:lint'], function () {
     .pipe(concat('main.min.css'))
     .pipe(cleanCss({keepBreaks: true}))
     .pipe(sourceMaps.write('./maps'))
-    .pipe(gulp.dest(path.build.style))
+    .pipe(gulp.dest(sysPath.build.style))
 });
 
 // favicon build
 gulp.task('favicon:build', function () {
-  return gulp.src(path.src.base + '*.ico')
-    .pipe(gulp.dest(path.build.base));
+  return gulp.src(sysPath.src.base + '*.ico')
+    .pipe(gulp.dest(sysPath.build.base));
 });
 
 // images build
 gulp.task('images:build', function () {
-  return gulp.src(path.src.images)
+  return gulp.src(sysPath.src.images)
     .pipe(imagemin({
       progressive: true,
       svgoPlugins: [{removeViewBox: false}],
       use: [pngquant()],
       interlaced: true
     }))
-    .pipe(gulp.dest(path.build.images));
+    .pipe(gulp.dest(sysPath.build.images));
 });
 
 // fonts build
 gulp.task('fonts:build', function() {
-  return gulp.src(path.src.fonts)
-    .pipe(gulp.dest(path.build.fonts))
+  return gulp.src(sysPath.src.fonts)
+    .pipe(gulp.dest(sysPath.build.fonts))
 });
 
 // revision
 gulp.task('revision', function () {
-  gulp.src([path.build.js + 'maps/*.map', path.build.style + 'maps/*.map'])
-    .pipe(gulp.dest(path.build.base + 'assets/maps/'));
+  gulp.src([sysPath.build.js + 'maps/*.map', sysPath.build.style + 'maps/*.map'])
+    .pipe(gulp.dest(sysPath.build.base + 'assets/maps/'));
 
   var folders = [
-    path.build.js + '*.js',
-    path.build.style + '*.css'
+    sysPath.build.js + '*.js',
+    sysPath.build.style + '*.css'
   ];
 
   return gulp.src(folders)
     .pipe(rev())
-    .pipe(gulp.dest(path.build.base + 'assets'))
+    .pipe(gulp.dest(sysPath.build.base + 'assets'))
     .pipe(rev.manifest())
-    .pipe(gulp.dest(path.build.base));
+    .pipe(gulp.dest(sysPath.build.base));
 });
 
 // revision replace
 gulp.task('revision-replace', function () {
-  var manifest = gulp.src(path.build.base + 'rev-manifest.json');
+  var manifest = gulp.src(sysPath.build.base + 'rev-manifest.json');
 
-  return gulp.src(path.build.html + '*.html')
+  return gulp.src(sysPath.build.html + '*.html')
     .pipe(revReplace({manifest: manifest}))
-    .pipe(gulp.dest(path.build.base));
+    .pipe(gulp.dest(sysPath.build.base));
 });
 
 // clean
 gulp.task('clean', function (callback) {
-  rimraf(path.clean, callback);
+  rimraf(sysPath.clean, callback);
+});
+
+// clean reports
+gulp.task('clean-reports', function (callback) {
+  rimraf(sysPath.reports, callback);
 });
 
 // build
@@ -218,25 +225,25 @@ gulp.task('build', function (callback) {
 /* watch
  =================================================================================*/
 gulp.task('watch', function(){
-  gulp.watch([path.watch.html], function() {
+  gulp.watch([sysPath.watch.html], function() {
     runSequence('html:build', 'revision-replace');
   });
-  gulp.watch([path.watch.style], function() {
+  gulp.watch([sysPath.watch.style], function() {
     gulp.run('style:build');
   });
-  gulp.watch([path.watch.js], function() {
+  gulp.watch([sysPath.watch.js], function() {
     gulp.run('js:build');
   });
-  gulp.watch([path.watch.images], function() {
+  gulp.watch([sysPath.watch.images], function() {
     gulp.run('images:build');
   });
-  gulp.watch([path.watch.fonts], function() {
+  gulp.watch([sysPath.watch.fonts], function() {
     gulp.run('fonts:build');
   });
-  gulp.watch([path.build.js + '*.js', path.build.style + '*.css'], function() {
+  gulp.watch([sysPath.build.js + '*.js', sysPath.build.style + '*.css'], function() {
     runSequence('html:build', 'revision', 'revision-replace');
   });
-  gulp.watch([path.build.html + '*.html', path.build.base + 'images/*', path.build.base + 'fonts/*']).on('change', reload);
+  gulp.watch([sysPath.build.html + '*.html', sysPath.build.base + 'images/*', sysPath.build.base + 'fonts/*']).on('change', reload);
 });
 /*=================================================================================*/
 
@@ -268,6 +275,17 @@ gulp.task('default', function (callback) {
     'watch',
     callback
   )
+});
+/*=================================================================================*/
+
+/* test
+ =================================================================================*/
+gulp.task('test', ['clean-reports'], function (done) {
+    var confPath = path.resolve('./karma.conf.js');
+    new karmaServer({
+      configFile: confPath,
+      singleRun: true
+    }, done).start();
 });
 /*=================================================================================*/
 
