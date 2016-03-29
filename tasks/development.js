@@ -288,6 +288,18 @@ gulp.task('test', ['clean-reports'], function () {
   var confPath = path.resolve('./karma.conf.js');
   karma.start({
     configFile: confPath,
+    singleRun: false
+  }, function(karmaExitStatus) {
+    if (karmaExitStatus) {
+      process.exit(1);
+    }
+  });
+});
+
+gulp.task('test-single', ['clean-reports'], function () {
+  var confPath = path.resolve('./karma.conf.js');
+  karma.start({
+    configFile: confPath,
     singleRun: true
   }, function(karmaExitStatus) {
     if (karmaExitStatus) {
