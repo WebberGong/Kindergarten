@@ -256,7 +256,7 @@ var config = {
   server: {
     baseDir: "./www"
   },
-  tunnel: true,
+  tunnel: false,
   host: 'localhost',
   port: 9732,
   logPrefix: "_LOG_"
